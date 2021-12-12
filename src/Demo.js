@@ -1,36 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
-
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 
 
-/*
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-*/
-
 // Trying out:
 //   https://www.freecodecamp.org/news/how-to-get-started-with-d3-and-react-c7da74a5bd9f/
 
+/*
 
 const initialBooks = [
   {
@@ -60,18 +35,6 @@ function App() {
 
   const d3Container = useRef(null);
 
-
-  /*
-  setBooks(books.concat(
-    {
-        name: "50 vegan dishes",
-        author: "Antti Leppänen",
-        genre: "non-fiction"
-    }
-  ));
-
-  */
-
   useEffect( () => {
 
     // this seems to need to be here, otherwise it won't render
@@ -96,8 +59,6 @@ function App() {
     }
   },
     // useEffect dependency parameters (updates when the vars in this array change).
-	// however, we do get a warning from node.js:
-	//	 React Hook useEffect has an unnecessary dependency: 'd3Container.current'. Either exclude it or remove the dependency array. Mutable values like 'd3Container.current' aren't valid dependencies because mutating them doesn't re-render the component  react-hooks/exhaustive-deps
     [d3Container.current]
   );
   return(
@@ -105,5 +66,74 @@ function App() {
   );
 }
 
+*/
+
+// trying to get D3 working with a React class.
+
+// following:
+// 	https://medium.com/@varvara.munday/d3-in-react-a-step-by-step-tutorial-cba33ce000ce
+
+class App extends React.Component {
+
+	constructor(props) {
+		super(props)
+		this.myRef = React.createRef();
+		this.dataset = [100, 200, 300, 400, 500];
+	}
+
+	componentDidMount() {
+		/*
+		// initial demo test
+		console.log(this.myRef);
+		d3.select(this.myRef.current)
+			.append('p')
+			.text('Hello from D3');
+		*/
+
+		let size = 500;
+		let svg = d3.select(this.myRef.current)
+			.append('svg')
+			.attr('width', size)
+			.attr('height', size);
+
+		let rect_width = 95;
+		svg.selectAll('rect')
+			.data(this.dataset)
+			.enter()
+			.append('rect')
+			.attr('x', (d, i) => 5 + i*(rect_width + 5))
+			.attr('y', d => size - d)
+			.attr('width', rect_width)
+			.attr('height', d => d)
+			.attr('fill', 'teal');
+
+	}
+
+    render() {
+		/*
+		return(
+			<div ref="temperatures"></div>
+		)
+		*/
+
+		return(
+			<div ref={this.myRef}></div>
+		)
+	}
+}
+
+/*
+function Temperature(props) {
+	const temperatureData = [ 8, 5, 13, 9, 12 ]
+	d3.select(this.refs.temperatures)
+		.selectAll("h2")
+		.data(temperatureData)
+		.enter()
+		.append("h2")
+		.text("New Temperature")
+
+}
+
+*/
 
 export default App;
